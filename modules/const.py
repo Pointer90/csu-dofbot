@@ -5,7 +5,7 @@ IN4 = 26
 ENA = 16
 ENB = 13
 
-CarSpeedControl = 80
+MOVEMENT_SPEED = 10
 
 RX = 8      # Define UART RX pin
 SP = 23     # Define Servo Pin (SP)
