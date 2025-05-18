@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from modules.const import ENA, ENB, IN1, IN2, IN3, IN4, SP, RX, EP, TP, MOVEMENT_SPEED
+from modules.const import PinEnum as Pin, MOVEMENT_SPEED
 
 
 class Car():
@@ -16,23 +16,23 @@ class Car():
         global pwm_ENB
         global pwm_SP
 
-        GPIO.setup(ENA, GPIO.OUT, initial=GPIO.HIGH)
-        GPIO.setup(IN1, GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(IN2, GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(ENB, GPIO.OUT, initial=GPIO.HIGH)
-        GPIO.setup(IN3, GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(IN4, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(Pin.ENA, GPIO.OUT, initial=GPIO.HIGH)
+        GPIO.setup(Pin.IN1, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(Pin.IN2, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(Pin.ENB, GPIO.OUT, initial=GPIO.HIGH)
+        GPIO.setup(Pin.IN3, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(Pin.IN4, GPIO.OUT, initial=GPIO.LOW)
 
-        GPIO.setup(SP, GPIO.OUT)
-        GPIO.setup(RX, GPIO.IN)
-        GPIO.setup(EP, GPIO.IN)
-        GPIO.setup(TP, GPIO.OUT)
+        GPIO.setup(Pin.SP, GPIO.OUT)
+        GPIO.setup(Pin.RX, GPIO.IN)
+        GPIO.setup(Pin.EP, GPIO.IN)
+        GPIO.setup(Pin.TP, GPIO.OUT)
 
-        pwm_ENA = GPIO.PWM(ENA, 2000)
-        pwm_ENB = GPIO.PWM(ENB, 2000)
+        pwm_ENA = GPIO.PWM(Pin.ENA, 2000)
+        pwm_ENB = GPIO.PWM(Pin.ENB, 2000)
         pwm_ENA.start(0)
         pwm_ENB.start(0)
-        pwm_SP = GPIO.PWM(SP, 50)
+        pwm_SP = GPIO.PWM(Pin.SP, 50)
         pwm_SP.start(0)
 
     def pwm_off():
@@ -45,10 +45,10 @@ class Car():
     def run(left_speed: int = MOVEMENT_SPEED, right_speed: int = MOVEMENT_SPEED):
         ''' Функция движения вперед '''
 
-        GPIO.output(IN1, GPIO.HIGH)
-        GPIO.output(IN2, GPIO.LOW)
-        GPIO.output(IN3, GPIO.HIGH)
-        GPIO.output(IN4, GPIO.LOW)
+        GPIO.output(Pin.IN1, GPIO.HIGH)
+        GPIO.output(Pin.IN2, GPIO.LOW)
+        GPIO.output(Pin.IN3, GPIO.HIGH)
+        GPIO.output(Pin.IN4, GPIO.LOW)
 
         pwm_ENA.ChangeDutyCycle(left_speed)
         pwm_ENB.ChangeDutyCycle(right_speed)
@@ -56,10 +56,10 @@ class Car():
     def back(left_speed: int = MOVEMENT_SPEED, right_speed: int = MOVEMENT_SPEED):
         ''' Функция движения назад '''
 
-        GPIO.output(IN1, GPIO.LOW)
-        GPIO.output(IN2, GPIO.HIGH)
-        GPIO.output(IN3, GPIO.LOW)
-        GPIO.output(IN4, GPIO.HIGH)
+        GPIO.output(Pin.IN1, GPIO.LOW)
+        GPIO.output(Pin.IN2, GPIO.HIGH)
+        GPIO.output(Pin.IN3, GPIO.LOW)
+        GPIO.output(Pin.IN4, GPIO.HIGH)
 
         pwm_ENA.ChangeDutyCycle(left_speed)
         pwm_ENB.ChangeDutyCycle(right_speed)
