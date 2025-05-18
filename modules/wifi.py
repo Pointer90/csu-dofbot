@@ -1,7 +1,6 @@
 import socket
 
-DEFAULT_PORT: int = 5050
-CONNECTION_COUNT: int = 2
+from modules.const import WifiEnum as Const
 
 class Wifi():
     _type: int
@@ -18,7 +17,7 @@ class Wifi():
 
         self._type = type_connection
 
-    def connect(self, ip: str, port: int = DEFAULT_PORT) -> socket.socket:
+    def connect(self, ip: str, port: int = Const.DEFAULT_PORT) -> socket.socket:
         ''' Функция для подключения к роботу Slave'''
         
         if self._type == 0:
@@ -34,8 +33,8 @@ class Wifi():
         return sock
 
     def stream(
-            self, callback_func, port: int = DEFAULT_PORT,
-            connection_count: int = CONNECTION_COUNT) -> None:
+            self, callback_func, port: int = Const.DEFAULT_PORT,
+            connection_count: int = Const.CONNECTION_COUNT) -> None:
         ''' Функция для вещания робота Master'''
 
         if self._type == 1:
