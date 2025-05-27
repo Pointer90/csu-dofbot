@@ -14,8 +14,4 @@ class PinEnum(Enum):
     TP = 1      # Define Trig Pin (TP)
 
 
-class WifiEnum(Enum):
-    DEFAULT_PORT = 5050
-    CONNECTION_COUNT = 2
-
 MOVEMENT_SPEED = 10

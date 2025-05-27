@@ -1,6 +1,6 @@
 import socket
+from time import sleep
 
-from modules.const import WifiEnum as Const
 
 class Wifi():
     _type: int
@@ -8,7 +8,7 @@ class Wifi():
     timeout: float = 5.0
 
     def __init__(self, type_connection: int = 0):
-        ''' 
+        '''
         Модуль подключения по WiFi
 
             type_connection:    0 - Master,
@@ -17,29 +17,29 @@ class Wifi():
 
         self._type = type_connection
 
-    def connect(self, ip: str, port: int = Const.DEFAULT_PORT) -> socket.socket:
+    def connect(self, ip: str, port: int = 5050) -> socket.socket:
         ''' Функция для подключения к роботу Slave'''
-        
+
         if self._type == 0:
             raise ValueError
-        
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            try:
-                sock.connect((ip, port))
-            
-            except Exception as e:
-                print(f'Connection failed: {e}')
+
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.connect((ip, port))
+
+        except Exception as e:
+            print(f'Connection failed: {e}')
 
         return sock
 
     def stream(
-            self, callback_func, port: int = Const.DEFAULT_PORT,
-            connection_count: int = Const.CONNECTION_COUNT) -> None:
+            self, callback_func, port: int = 5050,
+            connection_count: int = 2) -> None:
         ''' Функция для вещания робота Master'''
 
         if self._type == 1:
             raise ValueError
-        
+
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             try:
                 sock.bind(('', port))
@@ -52,14 +52,15 @@ class Wifi():
                     try:
                         callback_func(conn)
                         print(f'Connection with {addr}:{port} alive')
+                        sleep(.05)
 
                     except Exception as e:
                         print(f'Connection with {addr}:{port} disconnect: {e}', end='\r')
                         raise
-            
+
             except Exception as e:
                 print(f'Server fatal error: {e}')
                 raise
-    
+
     def shutdown(self):
         self.run = False
