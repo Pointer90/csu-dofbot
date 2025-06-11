@@ -15,11 +15,12 @@ class Parser():
         return data.model_dump_json().encode('utf-8')
 
     def excute(self, data: bytes):
-        data = BaseDTO.model_validate_json(data.decode('utf-8'))
+        data: BaseDTO = BaseDTO.model_validate_json(data.decode('utf-8'))
         # data = json.loads(data.decode('utf-8'))
 
         module = importlib.import_module(data.target)
 
         exec = getattr(module, data.cmd)
+        return exec, data.args
 
-        exec(*data.args) if data.args else exec()
+        # exec(*data.args) if data.args else exec()

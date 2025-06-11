@@ -8,10 +8,15 @@ class PinEnum(Enum):
     ENA = 16
     ENB = 13
 
-    RX = 8      # Define UART RX pin
+    RX = 8      # Define Bluetooth input
+    TX = 10     # Define Bluetooth output
     SP = 23     # Define Servo Pin (SP)
     EP = 0      # Define Echo Pin (EP)
     TP = 1      # Define Trig Pin (TP)
 
 
 MOVEMENT_SPEED = 10
+
+TRIBOT_RIGHT_WHEEL = 0
+TRIBOT_MIDLE_WHEEL = 55
+TRIBOT_LEFT_WHEEL = 110

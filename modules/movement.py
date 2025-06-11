@@ -1,16 +1,14 @@
 import RPi.GPIO as GPIO
-from modules.const import PinEnum as Pin, MOVEMENT_SPEED
+from modules.const import TRIBOT_LEFT_WHEEL, TRIBOT_MIDLE_WHEEL, TRIBOT_RIGHT_WHEEL, PinEnum as Pin, MOVEMENT_SPEED
+from abc import ABC, abstractmethod
 
 
-class Car():
-    def __init__():
+class BaseCar(ABC):
+    def __init__(self):
         ''' Motor pins are initialized into output mode
             Key pin is initialized into input mode
             Ultrasonic pin initialization
         '''
-
-        GPIO.setmode(GPIO.BCM)      # Set the GPIO port to BCM encoding mode.
-        GPIO.setwarnings(False)     # Ignore warning information
 
         global pwm_ENA
         global pwm_ENB
@@ -35,6 +33,26 @@ class Car():
         pwm_SP = GPIO.PWM(Pin.SP, 50)
         pwm_SP.start(0)
 
+    @abstractmethod
+    def run():
+        pass
+
+    @abstractmethod
+    def back():
+        pass
+
+    @abstractmethod
+    def left():
+        pass
+
+    @abstractmethod
+    def right():
+        pass
+
+
+class Car4WD():
+    ''' Четырёхколёсный робот '''
+
     def pwm_off():
         ''' Выключить питание моторов '''
 
@@ -42,24 +60,73 @@ class Car():
         pwm_ENB.stop()
         GPIO.cleanup()
 
-    def run(left_speed: int = MOVEMENT_SPEED, right_speed: int = MOVEMENT_SPEED):
-        ''' Функция движения вперед '''
+    def run(speed: int = MOVEMENT_SPEED):
+        ''' Функция движения вперед, defaut speed = 10'''
 
         GPIO.output(Pin.IN1, GPIO.HIGH)
         GPIO.output(Pin.IN2, GPIO.LOW)
         GPIO.output(Pin.IN3, GPIO.HIGH)
         GPIO.output(Pin.IN4, GPIO.LOW)
 
-        pwm_ENA.ChangeDutyCycle(left_speed)
-        pwm_ENB.ChangeDutyCycle(right_speed)
+        pwm_ENA.ChangeDutyCycle(speed)
+        pwm_ENB.ChangeDutyCycle(speed)
 
-    def back(left_speed: int = MOVEMENT_SPEED, right_speed: int = MOVEMENT_SPEED):
-        ''' Функция движения назад '''
+    def back(speed: int = MOVEMENT_SPEED):
+        ''' Функция движения назад, defaut speed = 10'''
 
         GPIO.output(Pin.IN1, GPIO.LOW)
         GPIO.output(Pin.IN2, GPIO.HIGH)
         GPIO.output(Pin.IN3, GPIO.LOW)
         GPIO.output(Pin.IN4, GPIO.HIGH)
 
-        pwm_ENA.ChangeDutyCycle(left_speed)
-        pwm_ENB.ChangeDutyCycle(right_speed)
+        pwm_ENA.ChangeDutyCycle(speed)
+        pwm_ENB.ChangeDutyCycle(speed)
+
+    def left(speed: int = MOVEMENT_SPEED):
+        '''
+        Функция поворота направо.
+
+        rotation_coefficient - коэффициент поворота, характеризующий скорость поворота
+        '''
+
+        rotation_coefficient = 1.25
+        GPIO.output(Pin.IN1, GPIO.HIGH)
+        GPIO.output(Pin.IN2, GPIO.LOW)
+        GPIO.output(Pin.IN3, GPIO.HIGH)
+        GPIO.output(Pin.IN4, GPIO.LOW)
+        pwm_ENA.ChangeDutyCycle(speed)
+        pwm_ENB.ChangeDutyCycle(speed * rotation_coefficient)
+
+    def right(speed: int = MOVEMENT_SPEED):
+        '''
+        Функция поворота направо.
+        
+        rotation_coefficient - коэффициент поворота, характеризующий скорость поворота
+        '''
+
+        rotation_coefficient = 1.25
+        GPIO.output(Pin.IN1, GPIO.HIGH)
+        GPIO.output(Pin.IN3, GPIO.HIGH)
+        GPIO.output(Pin.IN4, GPIO.LOW)
+        GPIO.output(Pin.IN2, GPIO.LOW)
+        pwm_ENA.ChangeDutyCycle(speed * rotation_coefficient)
+        pwm_ENB.ChangeDutyCycle(speed)
+
+
+class TriBot(BaseCar):
+    ''' Трёхколёсный робот'''
+    def run(self):
+        self.pwm_servo.ChangeDutyCycle(2.5 + 10 * TRIBOT_MIDLE_WHEEL / 180)
+        super().run()
+
+    def back(self):
+        self.pwm_servo.ChangeDutyCycle(2.5 + 10 * TRIBOT_MIDLE_WHEEL / 180)
+        super().back()
+
+    def right(self):
+        self.pwm_servo.ChangeDutyCycle(2.5 + 10 * TRIBOT_RIGHT_WHEEL / 180)
+        super().right()
+
+    def left(self):
+        self.pwm_servo.ChangeDutyCycle(2.5 + 10 * TRIBOT_LEFT_WHEEL / 180)
+        super().left()
