@@ -23,6 +23,7 @@ class BaseCar(ABC):
 
         GPIO.setup(Pin.SP, GPIO.OUT)
         GPIO.setup(Pin.RX, GPIO.IN)
+        GPIO.setup(Pin.TX, GPIO.OUT)
         GPIO.setup(Pin.EP, GPIO.IN)
         GPIO.setup(Pin.TP, GPIO.OUT)
 
@@ -50,7 +51,7 @@ class BaseCar(ABC):
         pass
 
 
-class Car4WD():
+class Car4WD(BaseCar):
     ''' Четырёхколёсный робот '''
 
     def pwm_off():
@@ -113,7 +114,7 @@ class Car4WD():
         pwm_ENB.ChangeDutyCycle(speed)
 
 
-class TriBot(BaseCar):
+class TriBot(Car4WD):
     ''' Трёхколёсный робот'''
     def run(self):
         self.pwm_servo.ChangeDutyCycle(2.5 + 10 * TRIBOT_MIDLE_WHEEL / 180)
